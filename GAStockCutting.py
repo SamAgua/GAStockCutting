@@ -219,8 +219,11 @@ for looper in range(NUMBER_OF_GENERATIONS):
         # In general, display the fittest individual of this generation.
         # In this demo, display only the first individual.
         # Clear the display by re-drawing the background with no elements  
-        canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki') 
-        display_individual = population[0] # display this individual, which is a list of dictionary 
+        canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki')
+        fittest_index = fitness.index(min(fitness))
+        display_individual = population[fittest_index] # display this individual, which is a list of dictionary
+
+        print("fittest index is ", fittest_index)
         for piece_count in range(NUMBER_OF_PIECES):
                 canvas.create_rectangle(display_individual[piece_count].get("x1"), 
                         display_individual[piece_count].get("y1"),
