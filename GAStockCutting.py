@@ -74,7 +74,10 @@ def makeRectObj(w, h, x1, y1, c):
                 "x1": x1, "y1": y1, 
                 "x2": x1+w, "y2": y1+h}  # Return a dictionary object
         
-
+def switchRects(p1, rect1, p2, rect2):
+    swtch = p1[rect1]
+    p1[rect1] = p2[rect2]
+    p2[rect2] = swtch
 
 # Use tkinter to display stock and pieces
 from tkinter import *      
@@ -146,8 +149,8 @@ for indiv_count in range(POPULATION_SIZE):
                         canvas.update()
                         time.sleep(0.02) # HARDCODED
 
-                print("individual  is ", individual)
-                print()
+                #print("individual  is ", individual)
+                #print()
 
         # The population is an array of individual objects
         population[indiv_count] = individual
@@ -193,32 +196,10 @@ for looper in range(NUMBER_OF_GENERATIONS):
                 fit_count += 1
                 print(fitness)
 
-        # SELECT INDIVIDUALS FOR REPRODUCTION IN THE NEXT GENERATIONCROSSOVER OPERATION FOR INDIVIDUALS
-        # MUTATION OPERATION FOR INDIVIDUALS
-        # In general, select with some randomness "several" individuals upon which
-        # to perform mutation of "some" (one or more) characteristics.
-        # TBD This demo is hardcoded to change only the first characteristic of the first individual.
-        mutating_individual = population[0] # mutating_individual is a list of dictionary 
-        print()
-        print("mutating indiv is ", mutating_individual)
-        print()
-        mutating_characteristic = mutating_individual[0]
-        print(" mutating_characteristic is ", mutating_characteristic)
-        print()
-
-        prev_value = mutating_characteristic.get("x1") 
-        new_value = prev_value + 5  # Mutate by incrementing
-        mutating_characteristic["x1"] = new_value
-        prev_value = mutating_characteristic.get("x2") 
-        new_value = prev_value + 5  # Mutate by incrementing
-        mutating_characteristic["x2"] = new_value
-
-        
-        
         # Display all pieces in their new position.
         # In general, display the fittest individual of this generation.
         # In this demo, display only the first individual.
-        # Clear the display by re-drawing the background with no elements  
+        # Clear the display by re-drawing the background with no elements
         canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki')
         fittest_index = fitness.index(min(fitness))
         display_individual = population[fittest_index] # display this individual, which is a list of dictionary
@@ -239,6 +220,49 @@ for looper in range(NUMBER_OF_GENERATIONS):
         canvas.update()
         time.sleep(1) # HARDCODED TIME -- pause briefly between generations
 
+
+        # SELECT INDIVIDUALS FOR REPRODUCTION IN THE NEXT GENERATION
+        p1 = random.randint(0, 9)
+        p2 = random.randint(0, 9)
+        while( p1 == p2) :
+            p2 = random.randint(0, 9)
+        ind_1 = population[p1] 
+        ind_2 = population[p2]
+        #CROSSOVER OPERATION FOR INDIVIDUALS
+        switchRects(ind_1, random.randint(0, 5), ind_2, random.randint(0, 5))
+
+        p1 = random.randint(0, 9)
+        p2 = random.randint(0, 9)
+        while( p1 == p2) :
+            p2 = random.randint(0, 9)
+        ind_1 = population[p1] 
+        ind_2 = population[p2]
+        switchRects(ind_1, random.randint(0, 5), ind_2, random.randint(0, 5))
+        
+        
+        # MUTATION OPERATION FOR INDIVIDUALS
+        # In general, select with some randomness "several" individuals upon which
+        # to perform mutation of "some" (one or more) characteristics.
+        # TBD This demo is hardcoded to change only the first characteristic of the first individual.
+        mutating_individual = population[random.randint(0,9)] # mutating_individual is a list of dictionary 
+        #print()
+        #print("mutating indiv is ", mutating_individual)
+        print()
+        mutating_characteristic = mutating_individual[random.randint(0, 5)]
+        #print(" mutating_characteristic is ", mutating_characteristic)
+       # print()
+
+        prev_value = mutating_characteristic.get("x1") 
+        new_value = prev_value + 5  # Mutate by incrementing
+        mutating_characteristic["x1"] = new_value
+        prev_value = mutating_characteristic.get("x2") 
+        new_value = prev_value + 5  # Mutate by incrementing
+        mutating_characteristic["x2"] = new_value
+
+        
+        
+          
+        
 
 
 
