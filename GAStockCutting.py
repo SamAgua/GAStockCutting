@@ -18,22 +18,22 @@ https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-pytho
 https://tkdocs.com/
 '''
 
-
 import time  # for pause during graphic display
 import random
 import sys
-#import tkFont  # http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/fonts.html
+
+# import tkFont  # http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/fonts.html
 random.seed(time.time())  # Initialize internal state of the random number generator.
 
 NUMBER_OF_PIECES = 6  # HARDCODED  
-STOCK_WIDTH = 800 # HARDCODED  Width of stock
-STOCK_HEIGHT = 400 # HARDCODED  Height of stock = 
-NUMBER_OF_GENERATIONS = 10 # HARDCODED Number of generations of evolution
+STOCK_WIDTH = 800  # HARDCODED  Width of stock
+STOCK_HEIGHT = 400  # HARDCODED  Height of stock =
+NUMBER_OF_GENERATIONS = 10  # HARDCODED Number of generations of evolution
 POPULATION_SIZE = 10  # HARDCODED Number of individuals in population
 
-piece_colors = ["gold", "deepskyblue", "green3", "tan1", "orchid1", 
-        "purple1", "red2", "palegreen", "goldenrod", "thistle2", "lightblue3",
-        "thistle"]
+piece_colors = ["gold", "deepskyblue", "green3", "tan1", "orchid1",
+                "purple1", "red2", "palegreen", "goldenrod", "thistle2", "lightblue3",
+                "thistle"]
 
 ''' 
 Definition of a class Piece that has data members:
@@ -44,77 +44,87 @@ Definition of a class Piece that has data members:
 Create an object of the class Piece using     Piece(x, y, ...)
 Place an object of the class Piece into a list   myList.append(myPiece)
 '''
+
+
 class Piece:
-        def __init__(self, xcoord, ycoord): # Add other values to this list
-                self.x = xcoord
-                self.y = ycoord
-        def setX(self, xcoord):
-                self.x = xcoord
-        def setY(self, ycoord):
-                self.y = ycoord
-        def getX(self):
-                return self.x
-        def getY(self):
-                return self.y
-                
-        # As you wish, define other function members of class Piece 
-        # to return other individual values or a set of several 
-        # values within a tuple or list.
-        
-        
+    def __init__(self, xcoord, ycoord):  # Add other values to this list
+        self.x = xcoord
+        self.y = ycoord
+
+    def setX(self, xcoord):
+        self.x = xcoord
+
+    def setY(self, ycoord):
+        self.y = ycoord
+
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
+
+    # As you wish, define other function members of class Piece
+    # to return other individual values or a set of several
+    # values within a tuple or list.
+
+
 '''
 Create a Piece object in a dictionary data structure, using the parameters
 for the piece position.
 TBD -- this places the piece within the stock (as opposed to putting
 at least the UL corner but not necessarily the LR corner in stock)
 '''
+
+
 # https://www.w3schools.com/python/python_dictionaries.asp
 def makeRectObj(w, h, x1, y1, c):
-        return { "width": w, "height": h, "color": c,
-                "x1": x1, "y1": y1, 
-                "x2": x1+w, "y2": y1+h}  # Return a dictionary object
-        
+    return {"width": w, "height": h, "color": c,
+            "x1": x1, "y1": y1,
+            "x2": x1 + w, "y2": y1 + h}  # Return a dictionary object
+
+def switchRects(p1, rect1, p2, rect2):
+    swtch = p1[rect1]
+    p1[rect1] = p2[rect2]
+    p2[rect2] = swtch
 
 
 # Use tkinter to display stock and pieces
-from tkinter import *      
-root = Tk()      
-canvas = Canvas(root, width = STOCK_WIDTH, height = STOCK_HEIGHT, bg='khaki')   
-canvas.pack()   
+from tkinter import *
 
-
+root = Tk()
+canvas = Canvas(root, width=STOCK_WIDTH, height=STOCK_HEIGHT, bg='khaki')
+canvas.pack()
 
 # Read data from a file if a file is given on the command line.
 # Open the file and read it into the list "content"
-if (len(sys.argv) > 1): # A command-line argument exists; assume it is an input filename
-        filename = sys.argv[1]
-        '''
-        # This section not genuinely indented, but necessary for comment
-        else: # Prompt for input filename
-                filename = input("\n\n\tPlease type an input data file name: ")
-        '''
-        try:
-                with open(filename) as f:
-                        content = f.readlines()
-        except FileNotFoundError:
-                sys.exit('Could not find file ' + filename)
+if (len(sys.argv) > 1):  # A command-line argument exists; assume it is an input filename
+    filename = sys.argv[1]
+    '''
+    # This section not genuinely indented, but necessary for comment
+    else: # Prompt for input filename
+            filename = input("\n\n\tPlease type an input data file name: ")
+    '''
+    try:
+        with open(filename) as f:
+            content = f.readlines()
+    except FileNotFoundError:
+        sys.exit('Could not find file ' + filename)
 
-        # Data in file is expected to be, on separate lines as shown:
-        #       Width of stock
-        #       Height of stock
-        #       Number of pieces to be cut from stock
-        #       Width Height   of piece 0
-        #       Width Height   of piece 1
-        #               . . .
-        #       Width Height   of piece (N-1)
-        #
-        # Show the data of the input data file, one word at a time
-        for i in range(0, len(content)):
-                line = content[i].split()
-                for j in range(0, len(line)):
-                        print(str(line[j]))
-                #print()
-
+    # Data in file is expected to be, on separate lines as shown:
+    #       Width of stock
+    #       Height of stock
+    #       Number of pieces to be cut from stock
+    #       Width Height   of piece 0
+    #       Width Height   of piece 1
+    #               . . .
+    #       Width Height   of piece (N-1)
+    #
+    # Show the data of the input data file, one word at a time
+    for i in range(0, len(content)):
+        line = content[i].split()
+        for j in range(0, len(line)):
+            print(str(line[j]))
+        # print()
 
 ''' Initialize and display POPULATION_SIZE number of pieces.
 TBD -- Initially, create all pieces of _size_ 200x200, 
@@ -124,43 +134,41 @@ at least the UL corner but not necessarily the LR corner in stock)
 '''
 population = [0 for i in range(POPULATION_SIZE)]
 for indiv_count in range(POPULATION_SIZE):
-        individual = [0 for j in range(NUMBER_OF_PIECES)]
-        for piece_count in range(NUMBER_OF_PIECES):
-                w = 200  #  TBD HARDCODED
-                h = 200  #  TBD HARDCODED
-                c = piece_colors[piece_count]  # TBD -- need more colors when more pieces
-                x1 = random.randint(0, STOCK_WIDTH - w)   # piece is within stock
-                y1 = random.randint(0, STOCK_HEIGHT - h)    # piece is within stock
-                
-                # An individual is an array of dictionary objects
-                individual[piece_count] = makeRectObj(w, h, x1, y1, c)
-                #print(individual[piece_count])
-                #print("        Piece ", piece_count, " x1 is ", (individual[piece_count]).get("x1"))
+    individual = [0 for j in range(NUMBER_OF_PIECES)]
+    for piece_count in range(NUMBER_OF_PIECES):
+        w = 200  # TBD HARDCODED
+        h = 200  # TBD HARDCODED
+        c = piece_colors[piece_count]  # TBD -- need more colors when more pieces
+        x1 = random.randint(0, STOCK_WIDTH - w)  # piece is within stock
+        y1 = random.randint(0, STOCK_HEIGHT - h)  # piece is within stock
 
-                
-                
-                # TBD  -- display the  first individual
-                # in general, display the fittest individual of this generation
-                if indiv_count == 0:
-                        canvas.create_rectangle(x1, y1, x1+w, y1+h, fill=c, outline='black')
-                        canvas.update()
-                        time.sleep(0.02) # HARDCODED
+        # An individual is an array of dictionary objects
+        individual[piece_count] = makeRectObj(w, h, x1, y1, c)
+        # print(individual[piece_count])
+        # print("        Piece ", piece_count, " x1 is ", (individual[piece_count]).get("x1"))
 
-                print("individual  is ", individual)
-                print()
+        # TBD  -- display the  first individual
+        # in general, display the fittest individual of this generation
+        if indiv_count == 0:
+            canvas.create_rectangle(x1, y1, x1 + w, y1 + h, fill=c, outline='black')
+            canvas.update()
+            time.sleep(0.02)  # HARDCODED
 
-        # The population is an array of individual objects
-        population[indiv_count] = individual
-        print("population[", indiv_count,"] is ", population[indiv_count])
+        print("individual  is ", individual)
         print()
-        #print("Piece ", piece_count, " x1 is ", (population[piece_count]).get("x1")
-        #print("Piece ", piece_count, " x1 is ", (population[piece_count])["x1"]
-        #print("Piece ", piece_count, " x1 is ", (population[piece_count])["x1"]
-        #print(population[piece_count])["x1"]
-        
-        
-        
-        #print()
+
+    # The population is an array of individual objects
+    population[indiv_count] = individual
+    print("population[", indiv_count, "] is ", population[indiv_count])
+    print()
+    # print("Piece ", piece_count, " x1 is ", (population[piece_count]).get("x1")
+    # print("Piece ", piece_count, " x1 is ", (population[piece_count])["x1"]
+    # print("Piece ", piece_count, " x1 is ", (population[piece_count])["x1"]
+    # print(population[piece_count])["x1"]
+
+    # print()
+
+
 
 
 '''
@@ -171,76 +179,100 @@ Remember:
         An INDIVIDUAL is a set of PIECE_COUNT pieces.
 '''
 for looper in range(NUMBER_OF_GENERATIONS):
+    print("---------------------Generation: ", looper)
+    # EVALUATE ALL INDIVIDUALS
+    fitness = [0 for i in range(POPULATION_SIZE)]
+    fit_count = 0
+    for indiv in population:
+        compGrid = [[0 for i in range(STOCK_WIDTH)] for j in range(STOCK_HEIGHT)]
+        sum_fitness = 0
+        for piece in indiv:
+            x1 = piece.get("x1")
+            #print(x1)
+            x2 = piece.get("x2")
+            y1 = piece.get("y1")
+            y2 = piece.get("y2")
+            for m in range(y1, y2 + 1):
+                for n in range(x1, x2 + 1):
+                    if compGrid[m][n] == 0:
+                        compGrid[m][n] = 1
+                        sum_fitness += 1
+        fitness[fit_count] = (1/((STOCK_HEIGHT * STOCK_WIDTH) - sum_fitness))*10**6 #to have better representation while selection
+        fitness[fit_count] = round(fitness[fit_count], 3)
+        fit_count += 1
+        #print("fitness is:", fitness)
+    print("fitness is:", fitness)
+    print()
 
-        # EVALUATE ALL INDIVIDUALS 
-        fitness = [0 for i in range(POPULATION_SIZE)]
-        fit_count = 0
-        for indiv in population:
-                compGrid = [[0 for i in range(STOCK_WIDTH)] for j in range(STOCK_HEIGHT)]
-                sum_fitness = 0
-                for piece in indiv:
-                        x1 = piece.get("x1")
-                        print(x1)
-                        x2 = piece.get("x2")
-                        y1 = piece.get("y1")
-                        y2 = piece.get("y2")
-                        for m in range(y1, y2 + 1):
-                                for n in range(x1, x2 + 1):
-                                        if compGrid[m][n] == 0:
-                                                compGrid[m][n] = 1
-                                                sum_fitness += 1
-                fitness[fit_count] = ( (STOCK_HEIGHT * STOCK_WIDTH) - sum_fitness)
-                fit_count += 1
-                print(fitness)
+    canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki')
+    fittest_index = fitness.index(max(fitness))
+    display_individual = population[fittest_index]  # display this individual, which is a list of dictionary
 
-        # SELECT INDIVIDUALS FOR REPRODUCTION IN THE NEXT GENERATIONCROSSOVER OPERATION FOR INDIVIDUALS
-        # MUTATION OPERATION FOR INDIVIDUALS
-        # In general, select with some randomness "several" individuals upon which
-        # to perform mutation of "some" (one or more) characteristics.
-        # TBD This demo is hardcoded to change only the first characteristic of the first individual.
-        mutating_individual = population[0] # mutating_individual is a list of dictionary 
-        print()
-        print("mutating indiv is ", mutating_individual)
-        print()
-        mutating_characteristic = mutating_individual[0]
-        print(" mutating_characteristic is ", mutating_characteristic)
-        print()
+    print("fittest index is ", fittest_index)
+    for piece_count in range(NUMBER_OF_PIECES):
+        canvas.create_rectangle(display_individual[piece_count].get("x1"),
+                                display_individual[piece_count].get("y1"),
+                                display_individual[piece_count].get("x2"),
+                                display_individual[piece_count].get("y2"),
+                                fill=display_individual[piece_count].get("color"),
+                                outline="black")
+        # tkFont.Font(family='Helvetica',size=36, weight='bold') # http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/fonts.html
+        canvas.create_text(display_individual[piece_count].get("x1") + 20,
+                           display_individual[piece_count].get("y1") + 20,
+                           text=str(piece_count))
 
-        prev_value = mutating_characteristic.get("x1") 
-        new_value = prev_value + 5  # Mutate by incrementing
-        mutating_characteristic["x1"] = new_value
-        prev_value = mutating_characteristic.get("x2") 
-        new_value = prev_value + 5  # Mutate by incrementing
-        mutating_characteristic["x2"] = new_value
+    canvas.update()
+    time.sleep(1)  # HARDCODED TIME -- pause briefly between generations
 
-        
-        
-        # Display all pieces in their new position.
-        # In general, display the fittest individual of this generation.
-        # In this demo, display only the first individual.
-        # Clear the display by re-drawing the background with no elements  
-        canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki')
-        fittest_index = fitness.index(min(fitness))
-        display_individual = population[fittest_index] # display this individual, which is a list of dictionary
+    # SELECT INDIVIDUALS FOR REPRODUCTION IN THE NEXT GENERATIONCROSSOVER OPERATION FOR INDIVIDUALS
+    #fitnesses = [chromosome.fitness for chromosome in population]
+    total_fitness = float(sum(fitness))
+    #print("total fitness:" , total_fitness)
 
-        print("fittest index is ", fittest_index)
-        for piece_count in range(NUMBER_OF_PIECES):
-                canvas.create_rectangle(display_individual[piece_count].get("x1"), 
-                        display_individual[piece_count].get("y1"),
-                        display_individual[piece_count].get("x2"),
-                        display_individual[piece_count].get("y2"),
-                        fill = display_individual[piece_count].get("color"),
-                        outline = "black")
-                #tkFont.Font(family='Helvetica',size=36, weight='bold') # http://infohost.nmt.edu/tcc/help/pubs/tkinter/web/fonts.html
-                canvas.create_text(display_individual[piece_count].get("x1") + 20, 
-                        display_individual[piece_count].get("y1") + 20,
-                        text=str(piece_count))
-                        
-        canvas.update()
-        time.sleep(1) # HARDCODED TIME -- pause briefly between generations
+    relative_fitness = [f / total_fitness for f in fitness]  # totals to 1
+    # Generate probability intervals for each individual
+    probList = [sum(relative_fitness[:i + 1]) for i in range(len(relative_fitness))]
+    # Draw new population
+    r = random.uniform(0, 1)
+    for (i, individual) in enumerate(population):
+        if r <= probList[i]:
+            p1 = individual
+            #print("p1 is: ", p1)
+    for (i, individual) in enumerate(population):
+        if r <= probList[i]:
+            p2 = individual
+            #print("p2 is: ", p2)
+
+    #--------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------------
+
+    #CROSSOVER IDNDIVIDUALS
+
+    switchRects(p1, random.randint(0,5), p2, random.randint(0,5))
+
+    # MUTATION OPERATION FOR INDIVIDUALS
+    # In general, select with some randomness "several" individuals upon which
+    # to perform mutation of "some" (one or more) characteristics.
+    # TBD This demo is hardcoded to change only the first characteristic of the first individual.
+    mutating_individual = population[0]  # mutating_individual is a list of dictionary
+    print()
+    print("mutating indiv is ", mutating_individual)
+    print()
+    mutating_characteristic = mutating_individual[0]
+    print(" mutating_characteristic is ", mutating_characteristic)
+    print()
+
+    prev_value = mutating_characteristic.get("x1")
+    new_value = prev_value + 5  # Mutate by incrementing
+    mutating_characteristic["x1"] = new_value
+    prev_value = mutating_characteristic.get("x2")
+    new_value = prev_value + 5  # Mutate by incrementing
+    mutating_characteristic["x2"] = new_value
+
+    # Display all pieces in their new position.
+    # In general, display the fittest individual of this generation.
+    # In this demo, display only the first individual.
+    # Clear the display by re-drawing the background with no elements
 
 
-
-
-
-mainloop()   # Graphics loop -- This statement follows all other statements
+mainloop()  # Graphics loop -- This statement follows all other statements
