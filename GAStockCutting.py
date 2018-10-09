@@ -74,10 +74,13 @@ def makeRectObj(w, h, x1, y1, c):
                 "x1": x1, "y1": y1, 
                 "x2": x1+w, "y2": y1+h}  # Return a dictionary object
         
-def switchRects(p1, rect1, p2, rect2):
-    swtch = p1[rect1]
-    p1[rect1] = p2[rect2]
-    p2[rect2] = swtch
+def switchRects(population, p1, rect1, p2, rect2):
+    child1 = p1
+    child2 = p2
+    child1[rect1] = p2[rect2]
+    child2[rect2] = p1[rect1]
+    population.append(child1)
+    population.append(child2)
 
 # Use tkinter to display stock and pieces
 from tkinter import *      
@@ -175,6 +178,8 @@ Remember:
 '''
 for looper in range(NUMBER_OF_GENERATIONS):
 
+        print("---------------------Generation: ", looper)
+
         # EVALUATE ALL INDIVIDUALS 
         fitness = [0 for i in range(POPULATION_SIZE)]
         fit_count = 0
@@ -183,28 +188,31 @@ for looper in range(NUMBER_OF_GENERATIONS):
                 sum_fitness = 0
                 for piece in indiv:
                         x1 = piece.get("x1")
-                        print(x1)
                         x2 = piece.get("x2")
                         y1 = piece.get("y1")
                         y2 = piece.get("y2")
-                        for m in range(y1, y2 + 1):
-                                for n in range(x1, x2 + 1):
+                        for m in range(y1, y2):
+                                for n in range(x1, x2):
                                         if compGrid[m][n] == 0:
                                                 compGrid[m][n] = 1
                                                 sum_fitness += 1
-                fitness[fit_count] = ( (STOCK_HEIGHT * STOCK_WIDTH) - sum_fitness)
+                fitness[fit_count] = (1/((STOCK_HEIGHT * STOCK_WIDTH) - sum_fitness))*10**6 #to have better representation while selection
+                fitness[fit_count] = round(fitness[fit_count], 3)
+
                 fit_count += 1
                 print(fitness)
+                print(fitness.index(max(fitness)))
 
         # Display all pieces in their new position.
         # In general, display the fittest individual of this generation.
         # In this demo, display only the first individual.
         # Clear the display by re-drawing the background with no elements
         canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki')
-        fittest_index = fitness.index(min(fitness))
-        display_individual = population[fittest_index] # display this individual, which is a list of dictionary
-
-        print("fittest index is ", fittest_index)
+        fittest_index = fitness.index(max(fitness))
+        display_individual = population[fittest_index] # display this individual, which is a list of dictionar
+        
+        canvas.create_rectangle(0, 0, STOCK_WIDTH, STOCK_HEIGHT, fill='khaki')
+        
         for piece_count in range(NUMBER_OF_PIECES):
                 canvas.create_rectangle(display_individual[piece_count].get("x1"), 
                         display_individual[piece_count].get("y1"),
@@ -222,23 +230,26 @@ for looper in range(NUMBER_OF_GENERATIONS):
 
 
         # SELECT INDIVIDUALS FOR REPRODUCTION IN THE NEXT GENERATION
-        p1 = random.randint(0, 9)
-        p2 = random.randint(0, 9)
-        while( p1 == p2) :
-            p2 = random.randint(0, 9)
-        ind_1 = population[p1] 
-        ind_2 = population[p2]
-        #CROSSOVER OPERATION FOR INDIVIDUALS
-        switchRects(ind_1, random.randint(0, 5), ind_2, random.randint(0, 5))
-
-        p1 = random.randint(0, 9)
-        p2 = random.randint(0, 9)
-        while( p1 == p2) :
-            p2 = random.randint(0, 9)
-        ind_1 = population[p1] 
-        ind_2 = population[p2]
-        switchRects(ind_1, random.randint(0, 5), ind_2, random.randint(0, 5))
         
+        firstFit = fitness.index(max(fitness))
+        del fitness[fitness.index(max(fitness))]
+        secondFit = fitness.index(max(fitness))
+        del fitness[fitness.index(max(fitness))]
+        thirdFit = fitness.index(max(fitness))
+        del fitness[fitness.index(max(fitness))]
+        fourthFit = fitness.index(max(fitness))
+        switchRects(population, population[firstFit], random.randint(0, 5), population[secondFit], random.randint(0, 5))
+        
+        switchRects(population, population[thirdFit], random.randint(0, 5), population[fourthFit], random.randint(0, 5))
+
+        del population[fitness.index(min(fitness))]
+        del population[fitness.index(min(fitness))]
+        del population[fitness.index(min(fitness))]
+        del population[fitness.index(min(fitness))]
+        del fitness[fitness.index(min(fitness))]
+        del fitness[fitness.index(min(fitness))]
+        print(len(population))
+        print(len(fitness))
         
         # MUTATION OPERATION FOR INDIVIDUALS
         # In general, select with some randomness "several" individuals upon which
